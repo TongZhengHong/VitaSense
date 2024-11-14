@@ -5,19 +5,28 @@ import BottomAppBar from "./components/BottomNavBar";
 import AppBar from "./components/AppBar";
 import useBluetooth from "./hooks/useBluetooth";
 import React from "react";
+import { openExternalFile } from "./utils/FileUtils";
 
 export default function App() {
   const { requestPermissions, scanForDevices } = useBluetooth();
 
   const runBluetoothScan = async () => {
-    console.log("Run bluetooth scan: ", await requestPermissions());
+    console.log(
+      "Bluetooth scan permissions result: ",
+      await requestPermissions()
+    );
     if (await requestPermissions()) {
       scanForDevices();
     }
   };
 
+  const runOpenFile = async () => {
+    openExternalFile();
+  };
+
   React.useEffect(() => {
-    runBluetoothScan();
+    // runBluetoothScan();
+    runOpenFile();
   });
 
   return (

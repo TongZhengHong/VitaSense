@@ -1,5 +1,6 @@
 import { Platform } from "react-native";
 import * as FileSystem from "expo-file-system";
+import * as DocumentPicker from "expo-document-picker";
 const { StorageAccessFramework } = FileSystem;
 
 const fileDir = FileSystem.cacheDirectory + "data/";
@@ -56,4 +57,20 @@ export async function saveFile(fileName: string, content: string) {
   } catch (e) {
     console.error("Couldn't save string:", fileName, e);
   }
+}
+
+export async function openExternalFile() {
+  try {
+    const { assets, canceled } = await DocumentPicker.getDocumentAsync({
+      type: ["text/csv"],
+    });
+    if (canceled) {
+      console.log("Pick operation cancelled by user");
+      return "";
+    }
+    const { name, uri } = assets[0];
+    console.log(name, uri);
+    const content = await FileSystem.readAsStringAsync(uri);
+    console.log(content)
+  } catch (error) {}
 }

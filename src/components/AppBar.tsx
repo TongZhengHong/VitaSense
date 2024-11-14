@@ -2,7 +2,7 @@ import * as React from "react";
 import { StyleSheet } from "react-native";
 import { Appbar, Text } from "react-native-paper";
 
-const ContentTitle = ({ title }) => (
+const ContentTitle = ({ title }: { title: string }) => (
   <Appbar.Content
     title={
       <Text variant="titleLarge" style={styles.appbarTitle}>
