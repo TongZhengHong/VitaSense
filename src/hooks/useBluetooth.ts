@@ -7,9 +7,14 @@ import {
   Characteristic,
   Device,
 } from "react-native-ble-plx";
+import base64 from "react-native-base64";
+import { Buffer } from "buffer";
 
-const DEVICE_UUID = "";
-const DEVICE_CHARACTERISTIC = "";
+const DEVICE_NAME = "DLG-PRPH";
+//9D9CAF86-67BA-4C57-8D9B-66DF387ACC4D
+const SERVICE_UUID = "18424398-7cbc-11e9-8f9e-2a86e4085a59";
+const CHARACTERISTIC_UUID = "5A87B4EF-3BFA-76A8-E642-92933C31434F";
+//00002A29-0000-1000-8000-00805f9b34fb
 
 type BluetoothAPI = {
   requestPermissions: () => Promise<boolean>;
@@ -82,41 +87,78 @@ const useBluetooth = (): BluetoothAPI => {
   const deviceList: Device[] = [];
 
   const scanForDevices = () => {
-    bleManager.startDeviceScan(null, null, (error, device) => {
-      console.log("Scanning for bluetooth device... \n");
+    bleManager.startDeviceScan(
+      null,
+      { allowDuplicates: false },
+      (error, device) => {
+        if (error) {
+          console.log(error.message);
+          return;
+        }
 
-      if (error) {
-        console.log(error.message);
-        return;
-      }
+        // Ignore if device is null
+        if (!device || device.name === null) return;
 
-      if (device) {
         if (!isDuplicatedDevice(deviceList, device)) {
           deviceList.push(device);
+          console.log(device.id, device.name, device.serviceUUIDs);
         }
-        // setAllDevices((prevDeviceList) => {
-        //   return isDuplicteDevice(prevDeviceList, device)
-        //     ? prevDeviceList
-        //     : [...prevDeviceList, device];
-        // });
-        console.log(deviceList.length);
-        deviceList.forEach((d) =>
-          console.log(d.id, d.localName, d.serviceUUIDs)
-        );
-        console.log(device.id, device.localName, device.serviceUUIDs);
+
+        if (device.name === DEVICE_NAME) {
+          console.log("DEVICE FOUND!", device.id, device.serviceUUIDs);
+          bleManager.stopDeviceScan();
+          connectToDevice(device);
+        }
       }
-    });
+    );
   };
 
   const connectToDevice = async (device: Device) => {
     try {
-      const connectedDevice = await bleManager.connectToDevice(device.id);
-      setConnectedDevice(connectedDevice);
+      const connectedDevice = await device.connect();
+      // setConnectedDevice(connectedDevice);
 
-      await connectedDevice.discoverAllServicesAndCharacteristics();
-      bleManager.stopDeviceScan();
+      const populatedDevice =
+        await connectedDevice.discoverAllServicesAndCharacteristics();
+      console.log("Successfully connected to:", populatedDevice.name);
 
-      startStreamingData(connectedDevice);
+      const characteristics = await populatedDevice.characteristicsForService(
+        SERVICE_UUID
+      );
+      characteristics.forEach((item) =>
+        console.log(
+          item.uuid,
+          "|",
+          item.isWritableWithResponse,
+          "|",
+          item.isWritableWithoutResponse
+        )
+      );
+
+      const writeValue = 1;
+      // Encode 8-bit value to hex, different from 16-bit values!
+      const hexString = Buffer.from([writeValue]).toString("hex");
+      const writeValueBase64 = Buffer.from(hexString, "hex").toString("base64");
+
+      device
+        .writeCharacteristicWithoutResponseForService(
+          SERVICE_UUID,
+          CHARACTERISTIC_UUID,
+          writeValueBase64
+        )
+        .then(() => {
+          console.log(
+            "Write characteristic success",
+            writeValueBase64,
+            writeValue
+          );
+        })
+        .catch((error) => {
+          console.error("Write characteristic error:", error);
+        });
+
+      await device.cancelConnection();
+      // startStreamingData(populatedDevice);
     } catch (error) {
       console.log("Error connecting to:", device.id, error);
     }
@@ -126,8 +168,9 @@ const useBluetooth = (): BluetoothAPI => {
     error: BleError | null,
     characteristic: Characteristic | null
   ) => {
+    console.log("RECEIVE BLUETOOTH DATA");
     if (error) {
-      console.log(error);
+      console.log("Receive error:", error);
       return;
     }
 
@@ -137,6 +180,7 @@ const useBluetooth = (): BluetoothAPI => {
     }
 
     const rawData = characteristic.value;
+    console.log(rawData);
     // const rawData = base64.decode(characteristic.value);
     // Do some bit shifting here to decode value further
     //TODO: Set data to rawData!!!
@@ -144,11 +188,20 @@ const useBluetooth = (): BluetoothAPI => {
   };
 
   const startStreamingData = async (device: Device) => {
-    if (!device) console.log("No device connected");
+    if (!device) {
+      console.log("No device connected");
+      return;
+    }
+
+    device.writeCharacteristicWithoutResponseForService(
+      SERVICE_UUID,
+      CHARACTERISTIC_UUID,
+      base64.encode("1")
+    );
 
     device.monitorCharacteristicForService(
-      DEVICE_UUID,
-      DEVICE_CHARACTERISTIC,
+      SERVICE_UUID,
+      CHARACTERISTIC_UUID,
       onReceiveData
     );
   };
