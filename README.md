@@ -1,101 +1,79 @@
-# VitaSense
+This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
 
-## Health monitoring mobile application built with React Native
+# Getting Started
 
-![Vitasense](images/overview.png)
+>**Note**: Make sure you have completed the [React Native - Environment Setup](https://reactnative.dev/docs/environment-setup) instructions till "Creating a new application" step, before proceeding.
 
-This project is part of EG2605 Undergraduate Research Opportunities Programme (UROP) undertaken during Year 2 Semester 2.
+## Step 1: Start the Metro Server
 
-Features:
+First, you will need to start **Metro**, the JavaScript _bundler_ that ships _with_ React Native.
 
-- View live raw sound data from sensors via Bluetooth Low Energy (BLE)
-- Display processed data
-  - Heart Rate
-  - Blood Pressure
-  - Respiratory Rate
-- Store and view historic data
-  - Stored as ranges and averages over different intervals
+To start Metro, run the following command from the _root_ of your React Native project:
 
-More detailed information can be found in the [report](report.pdf). Link to initial Figma design can be found [here](https://www.figma.com/proto/rscaqvvfQG3oc2lAk9ymbp/UROP-Project?node-id=0-1&t=D2Rvm3p4Alzlo0zG-1).
+```bash
+# using npm
+npm start
 
-### Installation
-
-Firstly, install the necessary packages to build the project via NPM
-
-```
-npm install
+# OR using Yarn
+yarn start
 ```
 
-> Since this project requires **Bluetooth** to receive data, the Expo Go app cannot be used for development. Instead, you have to build the **native applications** for Android and iOS.
+## Step 2: Start your Application
 
-However, due to the need for the Apple Developer license to run on iOS, our primary target will be on **Android** devices for development.
+Let Metro Bundler run in its _own_ terminal. Open a _new_ terminal from the _root_ of your React Native project. Run the following command to start your _Android_ or _iOS_ app:
 
-#### Android
+### For Android
 
-Install `Android NDK` via Android Studio for Skia to build natively using C++. Next, specify the android sdk path by creating a file named `local.properties` in the android folder and adding the following entry:
+```bash
+# using npm
+npm run android
 
-```
-// Windows
-sdk.dir = C://Users//USERNAME//AppData//Local//Android//Sdk
-
-// MacOS
-sdk.dir = /Users/USERNAME/Library/Android/sdk
+# OR using Yarn
+yarn android
 ```
 
-Run the following commands in terminal to compile and run the development build to be run on Android deveices. Refer to [here](https://docs.expo.dev/guides/local-app-development/) for more information regarding compiling the application.
+### For iOS
 
-```
-npx expo prebuild
-npx expo run:android
-```
+```bash
+# using npm
+npm run ios
 
-Software versions to compile build:
-| Software | Version |
-| -------- | -------- |
-| Java | 17 |
-| Android SDK | 35 |
-| Android SDK build tools | 35 |
-| Android NDK | 25.1.8937393 |
-
-Alternatively, you can run the development build which makes use of `expo-dev-client`. The application will run automatically after the build completes.
-
-```
-eas build --profile development --platform android --local
+# OR using Yarn
+yarn ios
 ```
 
-To run subsequent development builds, simply run:
+If everything is set up _correctly_, you should see your new app running in your _Android Emulator_ or _iOS Simulator_ shortly provided you have set up your emulator/simulator correctly.
 
-```
-npx expo start
-```
+This is one way to run your app — you can also run it directly from within Android Studio and Xcode respectively.
 
-## Features
+## Step 3: Modifying your App
 
-### Summary overview
+Now that you have successfully run the app, let's modify it.
 
-The summary page offers an overview of all the processed data obtained from the sensor. Currently, the application is able to show single value metrics (such as heart and respiratory rate) and double value metrics (like blood pressure).
+1. Open `App.tsx` in your text editor of choice and edit some lines.
+2. For **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Developer Menu** (<kbd>Ctrl</kbd> + <kbd>M</kbd> (on Window and Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (on macOS)) to see your changes!
 
-![Summary](images/summary.png)
+   For **iOS**: Hit <kbd>Cmd ⌘</kbd> + <kbd>R</kbd> in your iOS Simulator to reload the app and see your changes!
 
-Implementing the line graphs was achieved using [Skia](https://skia.org/), a 2D graphics engine which can render animations on a separate UI thread, distinct from the main JavaScript thread. The D3 library was used to process the data into a format conducive to Skia operations.
+## Congratulations! :tada:
 
-### View live data
+You've successfully run and modified your React Native App. :partying_face:
 
-The listen page offers medical personnel a comprehensive view of raw sound data measured by the sensor, presented in a cardiogram format.
+### Now what?
 
- <img src="images/live.png" alt="Live data" width="200px" />
+- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
+- If you're curious to learn more about React Native, check out the [Introduction to React Native](https://reactnative.dev/docs/getting-started).
 
-In order to display incoming data at rate greater than the display refresh rate of 60 fps/hz, the function handling incoming values follows these steps:
+# Troubleshooting
 
-1. Data received from Bluetooth is stored in an array buffer.
-2. With each frame drawn approximately every 17 milliseconds (1/60 Hz), we calculate the number of pixels the pointer will cover in each frame rerender (17 ms).
-3. In cases where the buffer contains multiple data points during a frame rerender, we evenly distribute the incoming data into groups. The number of groups corresponds to the number of pixels displayed in each rerender.
-4. Subsequently, we compute the average value of each group and display the resulting value for each corresponding pixel.
+If you can't get this to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
 
-### Historical data
+# Learn More
 
-This page functions as a repository for long-term data storage, drawing inspiration from Apple Health's interface. Data is presented using bars that represent the range of values observed during a specific interval.
+To learn more about React Native, take a look at the following resources:
 
- <img src="images/history.png" alt="Live data" width="800px" />
-
-Data is stored in the device's internal storage. To facilitate file storage operations within the internal storage of the device, the Expo File System library is used.
+- [React Native Website](https://reactnative.dev) - learn more about React Native.
+- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
+- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
+- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
+- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
