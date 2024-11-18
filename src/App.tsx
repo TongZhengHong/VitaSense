@@ -1,39 +1,31 @@
-import { StatusBar } from "expo-status-bar";
-import { SafeAreaView, StyleSheet, View, Text } from "react-native";
+import React, {useEffect} from 'react';
+import {SafeAreaView, StyleSheet} from 'react-native';
 
-import BottomAppBar from "./components/BottomNavBar";
-import AppBar from "./components/AppBar";
-import useBluetooth from "./hooks/useBluetooth";
-import React from "react";
+import AppBar from './components/AppBar';
+import BottomAppBar from './components/BottomNavBar';
+import {openExternalFile} from './utils/FileUtils';
 
-export default function App() {
-  const { requestPermissions, scanForDevices } = useBluetooth();
-
-  const runBluetoothScan = async () => {
-    console.log("Run bluetooth scan: ", await requestPermissions());
-    if (await requestPermissions()) {
-      scanForDevices();
-    }
+function App(): React.JSX.Element {
+  const openFile = async () => {
+    openExternalFile();
   };
 
-  React.useEffect(() => {
-    runBluetoothScan();
+  useEffect(() => {
+    openFile();
   });
 
   return (
-    <View style={styles.container}>
-      <StatusBar />
+    <SafeAreaView style={styles.container}>
       <AppBar />
       <BottomAppBar />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // backgroundColor: "#fff",
-    // alignItems: "center",
-    // justifyContent: "center",
   },
 });
+
+export default App;

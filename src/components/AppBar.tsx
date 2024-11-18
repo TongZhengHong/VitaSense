@@ -1,15 +1,15 @@
-import * as React from "react";
-import { StyleSheet } from "react-native";
-import { Appbar, Text } from "react-native-paper";
+import * as React from 'react';
+import {StyleSheet} from 'react-native';
+import {Appbar, Text} from 'react-native-paper';
 
-const ContentTitle = ({ title }) => (
+const ContentTitle = ({title}: {title: string}) => (
   <Appbar.Content
     title={
       <Text variant="titleLarge" style={styles.appbarTitle}>
         {title}
       </Text>
     }
-    style={{ alignItems: "flex-start" }}
+    style={{alignItems: 'flex-start'}}
   />
 );
 
@@ -25,7 +25,7 @@ export default function AppBar() {
 
 const styles = StyleSheet.create({
   appbarTitle: {
-    fontWeight: "bold",
+    fontWeight: 'bold',
     marginStart: 12,
   },
 });

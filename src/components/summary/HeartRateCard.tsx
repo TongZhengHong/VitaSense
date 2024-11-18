@@ -4,32 +4,35 @@ import { StyleSheet } from "react-native";
 import { DATA_RED } from "../../constants/colors";
 import { ChartData } from "../charts/ChartDataTypes";
 import { generateData } from "./random";
-import { readFile, saveFile } from "../../utils/FileUtils";
+// import { readFile, saveFile } from "../../utils/FileUtils";
 import HealthCard from "./card/HealthCard";
 
 const HEART_RATE_UNIT = "bpm";
 const FILE_NAME = "HeartRate";
 
 const loadData = async (setHeartRateData: (x: ChartData[]) => void) => {
-  const content = await readFile(FILE_NAME);
+  // const content = await readFile(FILE_NAME);
 
-  if (content.length == 0) {
-    const genData = generateData(60, 120, 2000);
-    setHeartRateData(genData);
+  // if (content.length == 0) {
+  //   const genData = generateData(60, 120, 2000);
+  //   setHeartRateData(genData);
 
-    const saveContent = JSON.stringify(genData);
-    saveFile(FILE_NAME, saveContent);
-    return;
-  }
+  //   const saveContent = JSON.stringify(genData);
+  //   saveFile(FILE_NAME, saveContent);
+  //   return;
+  // }
 
-  // Load existing data in file
-  const rawData = JSON.parse(content);
-  // Convert date string into Date object
-  const loadedData: ChartData[] = rawData.map((item: any) => ({
-    value: item.value,
-    timestamp: new Date(item.timestamp),
-  }));
-  setHeartRateData(loadedData);
+  // // Load existing data in file
+  // const rawData = JSON.parse(content);
+  // // Convert date string into Date object
+  // const loadedData: ChartData[] = rawData.map((item: any) => ({
+  //   value: item.value,
+  //   timestamp: new Date(item.timestamp),
+  // }));
+  // setHeartRateData(loadedData);
+
+  const genData = generateData(60, 120, 2000);
+  setHeartRateData(genData);
 };
 
 export default function HeartRateCard() {
