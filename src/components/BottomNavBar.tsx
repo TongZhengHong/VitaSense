@@ -3,14 +3,16 @@ import {BottomNavigation, Text} from 'react-native-paper';
 import SummaryScreen from '../screens/SummaryScreen';
 import HistoryScreen from '../screens/HistoryScreen';
 import ListenScreen from '../screens/ListenScreen';
+import LoadDataScreen from '../screens/LoadDataScreen';
 
 const HomeRoute = () => <SummaryScreen />;
 
 const ListenRoute = () => <ListenScreen />;
 
+const LoadDataRoute = () => <LoadDataScreen />;
+
 const HistoryRoute = () => <HistoryScreen />;
 
-const ProfileRoute = () => <Text>Profile</Text>;
 
 const BottomAppBar = () => {
   const [index, setIndex] = React.useState(0);
@@ -27,20 +29,20 @@ const BottomAppBar = () => {
       focusedIcon: 'clipboard-pulse',
       unfocusedIcon: 'clipboard-pulse-outline',
     },
-    {key: 'history', title: 'History', focusedIcon: 'history'},
     {
-      key: 'profile',
-      title: 'Profile',
-      focusedIcon: 'account-circle',
-      unfocusedIcon: 'account-circle-outline',
+      key: 'loadData',
+      title: 'Load',
+      focusedIcon: 'file-upload',
+      unfocusedIcon: 'file-upload-outline',
     },
+    {key: 'history', title: 'History', focusedIcon: 'history'},
   ]);
 
   const renderScene = BottomNavigation.SceneMap({
     home: HomeRoute,
     listen: ListenRoute,
     history: HistoryRoute,
-    profile: ProfileRoute,
+    loadData: LoadDataRoute,
   });
 
   return (
