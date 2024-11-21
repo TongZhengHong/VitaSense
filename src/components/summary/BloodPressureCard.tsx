@@ -1,20 +1,20 @@
-import React from "react";
-import { StyleSheet } from "react-native";
+import React from 'react';
+import {StyleSheet} from 'react-native';
 
-import { DATA_YELLOW } from "../../constants/colors";
-import { generateData } from "./random";
-import { ChartData } from "../charts/ChartDataTypes";
-import { readFile, saveFile } from "../../utils/FileUtils";
-import HealthCard from "./card/HealthCard";
+import {DATA_YELLOW} from '../../constants/colors';
+import {generateData} from './random';
+import {ChartData} from '../charts/ChartDataTypes';
+// import { readFile, saveFile } from "../../utils/FileUtils";
+import HealthCard from './card/HealthCard';
 
-const SYS_UNIT = "sys";
-const DIA_UNIT = "dia";
+const SYS_UNIT = 'sys';
+const DIA_UNIT = 'dia';
 
-const FILE_NAME = "BloodPressure";
+const FILE_NAME = 'BloodPressure';
 
 const loadData = async (
   offset: number,
-  setHeartRateData: (x: ChartData[]) => void
+  setHeartRateData: (x: ChartData[]) => void,
 ) => {
   const content = await readFile(FILE_NAME);
 
@@ -43,8 +43,8 @@ export default function BloodPressureCard() {
 
   return (
     <HealthCard
-      title={"Blood Pressure"}
-      titleIcon={"clipboard-pulse-outline"}
+      title={'Blood Pressure'}
+      titleIcon={'clipboard-pulse-outline'}
       data={sysData}
       data2={diaData}
       unit={SYS_UNIT}

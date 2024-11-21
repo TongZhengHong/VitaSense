@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {
   DashPathEffect,
   Group,
@@ -6,11 +6,11 @@ import {
   Text,
   useFont,
   vec,
-} from "@shopify/react-native-skia";
-import _ from "lodash";
+} from '@shopify/react-native-skia';
+import _ from 'lodash';
 
-import { linspace } from "./utils/LineChartUtils";
-import { DefaultLineChartProps, GraphDimensions } from "./utils/LineChartTypes";
+import {linspace} from './utils/LineChartUtils';
+import {DefaultLineChartProps, GraphDimensions} from './utils/LineChartTypes';
 
 type YAxisProps = {
   minValue: number;
@@ -34,9 +34,12 @@ export default function YAxis({
     noOfSteps,
     labelFontSize,
   } = graphProps;
-  const { canvasWidth, graphHeight } = dimension;
+  const {canvasWidth, graphHeight} = dimension;
 
-  const font = useFont(require("./../../assets/Roboto.ttf"), labelFontSize);
+  const font = useFont(
+    require('./../../assets/fonts/Roboto.ttf'),
+    labelFontSize,
+  );
   const yAxisLabels = linspace(minValue, maxValue, noOfSteps, true);
 
   return (
@@ -81,8 +84,7 @@ export default function YAxis({
             <Line
               key={index}
               p1={vec(yLabelWidth, yPos)}
-              p2={vec(canvasWidth, yPos)}
-            >
+              p2={vec(canvasWidth, yPos)}>
               <DashPathEffect intervals={[5, 5]} />
             </Line>
           );

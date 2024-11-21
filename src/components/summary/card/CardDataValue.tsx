@@ -1,22 +1,22 @@
-import React from "react";
+import React from 'react';
 
-import { StyleSheet } from "react-native";
+import {StyleSheet} from 'react-native';
 import {
   differenceInSeconds,
   format,
   formatDistanceToNow,
   formatDistanceToNowStrict,
-} from "date-fns";
+} from 'date-fns';
 import Animated, {
   SharedValue,
   runOnJS,
   useDerivedValue,
   useSharedValue,
-} from "react-native-reanimated";
-import { Canvas, Text, useFont } from "@shopify/react-native-skia";
+} from 'react-native-reanimated';
+import {Canvas, Text, useFont} from '@shopify/react-native-skia';
 
-const BOLD_FONT_PATH = "./../../../assets/Roboto-Bold.ttf";
-const MEDIUM_FONT_PATH = "./../../../assets/Roboto-Medium.ttf";
+const BOLD_FONT_PATH = './../../../assets/fonts/Roboto-Bold.ttf';
+const MEDIUM_FONT_PATH = './../../../assets/fonts/Roboto-Medium.ttf';
 
 const MIN_CANVAS_WIDTH = 140;
 const START_SPACING = 4;
@@ -60,18 +60,18 @@ type DataValueProp = {
  */
 const getLastUpdatedText = (lastData: Date, showExactTime: boolean): string => {
   const seconds = differenceInSeconds(Date.now(), lastData);
-  if (seconds <= 2) return "Updated now";
+  if (seconds <= 2) return 'Updated now';
 
   const result = showExactTime
-    ? formatDistanceToNowStrict(lastData, { addSuffix: true }) +
-      " at " +
-      format(lastData, "kk:mm")
+    ? formatDistanceToNowStrict(lastData, {addSuffix: true}) +
+      ' at ' +
+      format(lastData, 'kk:mm')
     : formatDistanceToNow(lastData, {
         includeSeconds: true,
         addSuffix: true,
       });
 
-  return result.replace("less than", "<");
+  return result.replace('less than', '<');
 };
 
 export default function CardDataValue(props: DataValueProp) {
@@ -79,15 +79,15 @@ export default function CardDataValue(props: DataValueProp) {
   const timestampFont = useFont(require(MEDIUM_FONT_PATH), 14);
 
   const shownValue = useDerivedValue(
-    () => props.value.value.toFixed(1) + " " + props.unit
+    () => props.value.value.toFixed(1) + ' ' + props.unit,
   );
   const shownValue2 = useDerivedValue(() =>
     props.value2 && props.unit2
-      ? props.value2.value.toFixed(1) + " " + props.unit2
-      : ""
+      ? props.value2.value.toFixed(1) + ' ' + props.unit2
+      : '',
   );
 
-  const shownTimestamp = useSharedValue("");
+  const shownTimestamp = useSharedValue('');
   const convertTimestamp = (timeString: string, showExactTime: boolean) => {
     const date = new Date(timeString);
     const durationString = getLastUpdatedText(date, showExactTime);
@@ -98,13 +98,13 @@ export default function CardDataValue(props: DataValueProp) {
   });
 
   const valueHeight = useDerivedValue(
-    () => valueFont?.measureText(shownValue.value).height ?? 0
+    () => valueFont?.measureText(shownValue.value).height ?? 0,
   );
   const value2Height = useDerivedValue(
-    () => valueFont?.measureText(shownValue2.value).height ?? 0
+    () => valueFont?.measureText(shownValue2.value).height ?? 0,
   );
   const timeHeight = useDerivedValue(
-    () => timestampFont?.measureText(shownTimestamp.value).height ?? 0
+    () => timestampFont?.measureText(shownTimestamp.value).height ?? 0,
   );
 
   const CANVAS_HEIGHT = useDerivedValue(() => {
@@ -126,7 +126,7 @@ export default function CardDataValue(props: DataValueProp) {
   });
 
   const value2Pos = useDerivedValue(
-    () => valueHeight.value + value2Height.value + TEXT_BOTTOM
+    () => valueHeight.value + value2Height.value + TEXT_BOTTOM,
   );
   const timestampPos = useDerivedValue(() => {
     const padding = value2Height.value == 0 ? TEXT_BOTTOM : 2 * TEXT_BOTTOM;
@@ -134,7 +134,7 @@ export default function CardDataValue(props: DataValueProp) {
   });
 
   return (
-    <Animated.View style={{ width: CANVAS_WIDTH, height: CANVAS_HEIGHT }}>
+    <Animated.View style={{width: CANVAS_WIDTH, height: CANVAS_HEIGHT}}>
       <Canvas style={styles.canvas}>
         <Text
           x={START_SPACING}
@@ -164,7 +164,7 @@ export default function CardDataValue(props: DataValueProp) {
 
 const styles = StyleSheet.create({
   canvas: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
   },
 });
