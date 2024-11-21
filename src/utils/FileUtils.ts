@@ -78,16 +78,11 @@
 import DocumentPicker from 'react-native-document-picker';
 import RNFS from 'react-native-fs';
 
-export async function openExternalFile() {
+export async function pickDocument() {
   try {
-    const pickedFile = await DocumentPicker.pickSingle({
-      type: DocumentPicker.types.csv,
-      copyTo: 'documentDirectory',
-    });
-    console.log('pickedFile', pickedFile);
-
-    await RNFS.readFile(pickedFile.uri).then(data => {
-      console.log(data);
+    return await DocumentPicker.pickSingle({
+      type: [DocumentPicker.types.csv, 'text/comma-separated-values'], // Second one for Android
+      // copyTo: 'documentDirectory',
     });
   } catch (error) {
     if (DocumentPicker.isCancel(error)) {
@@ -96,5 +91,16 @@ export async function openExternalFile() {
       console.log(error);
       throw error;
     }
+    return null;
+  }
+}
+
+export async function readFileFromUri(fileUri: string) {
+  try {
+    const content = await RNFS.readFile(fileUri);
+    return content.split('\n').map(v => +v);
+  } catch (error) {
+    console.log(error);
+    return [];
   }
 }
